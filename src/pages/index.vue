@@ -4,7 +4,8 @@
     <div class="container">
       <CheaderVue />
       <div class="mt-[100px]">
-        <emptyInvoice />
+        <emptyInvoice v-if="false" />
+        <invoice />
       </div>
     </div>
   </div>
@@ -14,4 +15,5 @@
 import CheaderVue from "../components/Cheader.vue";
 import SidebarVue from "../components/Csidebar.vue";
 import emptyInvoice from "../components/emptyInvoice.vue";
+import invoice from "@/components/invoice.vue";
 </script>
