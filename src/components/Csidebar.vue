@@ -34,11 +34,6 @@
 import { ref, onMounted } from "vue";
 const isDark = ref(false);
 
-// onMounted(() => {
-//   const storedIsDark = localStorage.getItem("isDark");
-//   isDark.value = storedIsDark !== null ? JSON.parse(storedIsDark) : false;
-// });
-
 function toggleIsDark() {
   isDark.value = !isDark.value;
   localStorage.setItem("isDark", isDark.value);

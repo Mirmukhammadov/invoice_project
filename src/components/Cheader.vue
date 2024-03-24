@@ -31,12 +31,28 @@
           </svg>
         </button>
       </div>
-
-      <firstButtonVue />
+      <firstButtonVue @someEvent="toggle" />
     </div>
   </div>
 </template>
 
 <script setup>
+import {
+  ref,
+  defineProps,
+  defineEmits,
+  provide,
+  onMounted,
+  onUnmounted,
+  getCurrentInstance,
+} from "vue";
 import firstButtonVue from "./firstButton.vue";
+const formModal = ref(true);
+const emit = defineEmits(["childData"]);
+
+function toggle() {
+  formModal.value = !formModal.value;
+  console.log(formModal.value);
+  emit("childData", formModal.value);
+}
 </script>
