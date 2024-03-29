@@ -52,7 +52,6 @@ const emit = defineEmits(["childData"]);
 
 function toggle() {
   formModal.value = !formModal.value;
-  console.log(formModal.value);
   emit("childData", formModal.value);
 }
 </script>

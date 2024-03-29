@@ -1,11 +1,15 @@
 <template>
   <div class="flex justify-between dark:bg-[#141625] overflow-x-hidden">
     <SidebarVue class="z-[100]" />
-    <Cform class="z-10 pl-[150px] absolute" v-if="formModal" />
+    <Cform
+      class="z-10 pl-[150px] absolute"
+      v-if="formModall"
+      @closeForm="formModall = !formModall"
+    />
   </div>
   <div
     class="dark:bg-[#141625] h-screen overflow-x-hidden z-0"
-    :class="{ formModalStyle: formModal, 'opacity-60': formModal }"
+    :class="{ formModalStyle: formModall, 'opacity-60': formModall }"
   >
     <div class="container">
       <CheaderVue @childData="handleChildData" />
@@ -27,13 +31,10 @@ import Cform from "@/components/Cform.vue";
 
 import { ref } from "vue";
 
-const formModal = ref(false);
+const formModall = ref(false);
 
 function handleChildData(data) {
-  console.log("clicked index");
-
-  console.log(data);
-  formModal.value = data;
+  formModall.value = data;
 }
 </script>
 

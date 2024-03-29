@@ -13,6 +13,7 @@
         Bill From
       </p>
       <Cinput label="Street address" v-model="billfrom.street" />
+
       <div class="flex justify-between">
         <Cinput label="City" v-model="billfrom.city" />
         <Cinput label="Post Code" v-model="billfrom.postcode" type="number" />
@@ -64,6 +65,10 @@
       placeholder="e.g. Graphic Design Service"
     />
 
+    <div class="text-red-500" v-if="validationError">
+      There is something wrong
+    </div>
+
     <p
       class="text-slate-500 text-lg font-bold font-['League Spartan'] leading-loose"
     >
@@ -72,7 +77,7 @@
 
     <div class="">
       <div
-        v-for="(item, index) in displayedItems.length"
+        v-for="(item, index) in items"
         :key="index"
         class="flex justify-between items-start"
       >
@@ -135,24 +140,23 @@
 
 <script setup>
 import Cinput from "./Cinput.vue";
-import { ref, computed } from "vue";
+import { ref, computed, defineEmits } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email } from "@vuelidate/validators";
 import { useMyModule } from "../store/modules/myModule"; // Adjust the import path as per your project structure
 
 const myModuleStore = useMyModule(); // Initialize the Pinia store
-const formModal = myModuleStore.formModal;
-items = [];
+const items = ref([]);
 
 function createNewitem() {
-  items.push({ name: "", qty: "", price: "" });
-  console.log(items);
-  console.log(displayedItems.value);
+  items.value.push({ name: "", qty: "", price: "" });
 }
 
 function removeItem(index) {
-  console.log(index);
+  items.value = items.value.filter((item, indes) => {
+    return indes !== index;
+  });
 }
-
-const displayedItems = computed(() => [...items]);
 
 const billfrom = ref({
   street: "",
@@ -173,13 +177,46 @@ const billto = ref({
   terms: "",
 });
 
-const submitInvoice = () => {
-  console.log("Invoice Number:", billfrom.value);
-  console.log("Invoice Number:", billto.value);
-  console.log(formModal, "modal value");
-  console.log("hi");
+const rules = {
+  billfrom: {
+    street: { required },
+    city: { required },
+    postcode: { required },
+    country: { required },
+  },
+  billto: {
+    clientName: { required },
+    clientEmail: { required, email },
+    street: { required },
+    city: { required },
+    postcode: { required },
+    country: { required },
+    desc: { required },
+    date: { required },
+    terms: { required },
+  },
+};
 
-  console.log("clicked");
+const v$ = useVuelidate(rules, { billfrom, billto });
+
+const emit = defineEmits(["closeForm"]);
+let validationError = ref(false);
+
+const submitInvoice = () => {
+  v$.value.$validate();
+
+  if (v$.value.$error) {
+    validationError.value = true;
+    console.log(validationError);
+
+    return;
+  } else {
+    console.log("all is good");
+  }
+  myModuleStore.addObjectToStore(billfrom.value);
+  myModuleStore.itemsArray = items.value;
+
+  emit("closeForm");
 };
 </script>
 

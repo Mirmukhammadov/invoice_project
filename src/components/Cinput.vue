@@ -7,10 +7,12 @@
     <input
       :id="props.id"
       :value="props.modelValue"
+      :error="props.modelValueError"
       :placeholder="props.placeholder"
       :type="props.type || 'text'"
       @input="$emit('update:modelValue', $event.target.value)"
       class="dark:bg-[#1e2139] dark:border-slate-800 dark:placeholder:text-white outline-none dark:text-white"
+      :class="{ border: true, 'border-red-500': error }"
     />
   </div>
 </template>
@@ -25,6 +27,7 @@ const props = defineProps({
   placeholder: String,
   modelValue: [String, Number],
   required: Boolean,
+  modelValueError: Boolean,
 });
 
 watch(
