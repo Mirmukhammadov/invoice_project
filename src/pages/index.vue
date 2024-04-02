@@ -15,7 +15,6 @@
       <CheaderVue @childData="handleChildData" />
 
       <div class="mt-[100px]">
-        <emptyInvoice v-if="false" />
         <invoice />
       </div>
     </div>

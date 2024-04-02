@@ -43,7 +43,7 @@
         <Cinput label="Country" v-model="billto.country" />
       </div>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between items-center">
       <Cinput
         label="Invoice Date"
         v-model="billto.date"
@@ -51,12 +51,25 @@
         type="date"
         style="width: 65%"
       />
-      <Cinput
+      <!-- <Cinput
         label="Payment Terms"
+        
         v-model="billto.terms"
         placeholder=""
         style="width: 65%"
-      />
+      /> -->
+
+      <select
+        name=""
+        id=""
+        v-model="billto.terms"
+        class="dark:bg-[#1e2139] dark:border-slate-800 dark:placeholder:text-white outline-none dark:text-white p-2 border border-gray-300 rounded-md h-[45px] w-1/2 mt-[-8px]"
+      >
+        <option class="optionstyle" value="1">Next 1 day</option>
+        <option class="optionstyle" value="7">Next 7 day</option>
+        <option class="optionstyle" value="14">Next 14 day</option>
+        <option class="optionstyle" value="30">Next 30 day</option>
+      </select>
     </div>
 
     <Cinput
@@ -76,22 +89,18 @@
     </p>
 
     <div class="">
-      <div
-        v-for="(item, index) in items"
-        :key="index"
-        class="flex justify-between items-start"
-      >
-        <Cinput label="Item Name" v-model="item.name" class="w-1/3" />
+      <div class="flex justify-between items-start">
+        <Cinput label="Item Name" v-model="newItem.name" class="w-1/3" />
         <Cinput
           label="Qty."
-          v-model="item.qty"
+          v-model="newItem.qty"
           placeholder="0"
           type="number"
           class="w-1/12"
         />
         <Cinput
           label="Price"
-          v-model="item.price"
+          v-model="newItem.price"
           placeholder="0.00"
           type="number"
           class="w-1/6"
@@ -104,7 +113,7 @@
           </p>
           <span
             class="dark:text-white text-slate-400 text-[15px] font-bold font-['League Spartan'] leading-[15px]"
-            >{{ item.qty * item.price }}</span
+            >{{ newItem.qty * newItem.price }}</span
           >
           <!-- <button @click="saveItem(index)">Save</button> -->
         </div>
@@ -146,16 +155,19 @@ import { required, email } from "@vuelidate/validators";
 import { useMyModule } from "../store/modules/myModule"; // Adjust the import path as per your project structure
 
 const myModuleStore = useMyModule(); // Initialize the Pinia store
-const items = ref([]);
 
-function createNewitem() {
-  items.value.push({ name: "", qty: "", price: "" });
-}
+// function createNewitem() {
+//   // Update the reactive state using a method provided by the store
+//   myModuleStore.addItemToStore(newItem);
+//   console.log(myModuleStore.addItemToStore);
+// }
 
 function removeItem(index) {
-  items.value = items.value.filter((item, indes) => {
-    return indes !== index;
-  });
+  myModuleStore.itemsArray.value = myModuleStore.itemsArray.value.filter(
+    (item, indes) => {
+      return indes !== index;
+    }
+  );
 }
 
 const billfrom = ref({
@@ -177,6 +189,13 @@ const billto = ref({
   terms: "",
 });
 
+const newItem = ref({
+  name: "",
+  qty: 0,
+  price: 0,
+  status: "pending",
+});
+
 const rules = {
   billfrom: {
     street: { required },
@@ -195,26 +214,41 @@ const rules = {
     date: { required },
     terms: { required },
   },
+  newItem: {
+    name: { required },
+    qty: { required },
+    price: { required },
+    status: { required },
+  },
 };
 
-const v$ = useVuelidate(rules, { billfrom, billto });
+const v$ = useVuelidate(rules, { billfrom, billto, newItem });
 
 const emit = defineEmits(["closeForm"]);
 let validationError = ref(false);
 
 const submitInvoice = () => {
-  v$.value.$validate();
+  // v$.value.$validate();
 
-  if (v$.value.$error) {
-    validationError.value = true;
-    console.log(validationError);
+  // if (v$.value.$error) {
+  //   validationError.value = true;
+  //   return;
+  // }
 
-    return;
-  } else {
-    console.log("all is good");
-  }
-  myModuleStore.addObjectToStore(billfrom.value);
-  myModuleStore.itemsArray = items.value;
+  // let daysToAdd = parseInt(billto.value.terms, 10);
+  // let dateObj = new Date(billto.value.date);
+  // dateObj.setDate(dateObj.getDate() + daysToAdd);
+  // let updatedDateString = dateObj.toISOString().slice(0, 10);
+
+  // console.log(updatedDateString);
+  // console.log(billfrom.value);
+  // console.log(billto.value);
+
+  myModuleStore.addObjectToStore(billto.value, billfrom.value);
+  myModuleStore.addItemToStore(newItem.value);
+  // myModuleStore.itemsArray = items.value;
+  console.log(myModuleStore.arr);
+  console.log(myModuleStore.itemsArray.value);
 
   emit("closeForm");
 };
@@ -231,5 +265,14 @@ const submitInvoice = () => {
   font-weight: 700;
   line-height: 15px;
   /* word-wrap: break-word" */
+}
+
+.optionstyle {
+  color: #0c0e16;
+  font-size: 15px;
+  font-family: League Spartan;
+  font-weight: 700;
+  line-height: 15px;
+  word-wrap: break-word;
 }
 </style>

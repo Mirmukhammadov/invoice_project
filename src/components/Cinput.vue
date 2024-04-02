@@ -7,12 +7,11 @@
     <input
       :id="props.id"
       :value="props.modelValue"
-      :error="props.modelValueError"
       :placeholder="props.placeholder"
       :type="props.type || 'text'"
       @input="$emit('update:modelValue', $event.target.value)"
       class="dark:bg-[#1e2139] dark:border-slate-800 dark:placeholder:text-white outline-none dark:text-white"
-      :class="{ border: true, 'border-red-500': error }"
+      :class="{ border: true, 'border-red-500': false }"
     />
   </div>
 </template>
