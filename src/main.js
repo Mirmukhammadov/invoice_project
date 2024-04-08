@@ -3,9 +3,8 @@ import "./assets/main.css";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
-import empty from "@/pages/invoicePage.vue";
 import Home from "@/pages/index.vue";
-import { useMyModule } from "./store/modules/myModule";
+// import { useMyModule } from "./store/modules/myModule";
 import App from "./App.vue";
 
 const pinia = createPinia();
@@ -18,9 +17,9 @@ const router = createRouter({
       component: Home,
     },
     {
-      path: "/:index",
-      name: "empty",
-      component: empty,
+      path: "/:id",
+      name: "emptyInvoice",
+      component: () => import("@/pages/mainInvoice.vue"),
     },
   ],
 });

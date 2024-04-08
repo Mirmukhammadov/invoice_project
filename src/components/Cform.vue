@@ -228,27 +228,34 @@ const emit = defineEmits(["closeForm"]);
 let validationError = ref(false);
 
 const submitInvoice = () => {
-  // v$.value.$validate();
+  v$.value.$validate();
 
-  // if (v$.value.$error) {
-  //   validationError.value = true;
-  //   return;
-  // }
+  if (v$.value.$error) {
+    validationError.value = true;
+    return;
+  }
 
-  // let daysToAdd = parseInt(billto.value.terms, 10);
-  // let dateObj = new Date(billto.value.date);
-  // dateObj.setDate(dateObj.getDate() + daysToAdd);
-  // let updatedDateString = dateObj.toISOString().slice(0, 10);
+  let daysToAdd = parseInt(billto.value.terms, 10);
+  let dateObj = new Date(billto.value.date);
+  dateObj.setDate(dateObj.getDate() + daysToAdd);
+  let updatedDateString = dateObj.toISOString().slice(0, 10);
 
-  // console.log(updatedDateString);
-  // console.log(billfrom.value);
-  // console.log(billto.value);
+  let itemsArray = localStorage.getItem("myModule");
+  let itemsObject = localStorage.getItem("itemsObject");
 
-  myModuleStore.addObjectToStore(billto.value, billfrom.value);
+  if (itemsArray) {
+    myModuleStore.itemsArray = JSON.parse(itemsArray);
+  }
+
+  if (itemsObject) {
+    myModuleStore.arr = JSON.parse(itemsObject);
+  }
+
+  myModuleStore.addObjectToStore(billfrom.value, billto.value);
   myModuleStore.addItemToStore(newItem.value);
-  // myModuleStore.itemsArray = items.value;
-  console.log(myModuleStore.arr);
-  console.log(myModuleStore.itemsArray.value);
+
+  localStorage.setItem("myModule", JSON.stringify(myModuleStore.itemsArray));
+  localStorage.setItem("itemsObject", JSON.stringify(myModuleStore.arr));
 
   emit("closeForm");
 };

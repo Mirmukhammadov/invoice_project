@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(item, index) in myModuleStore.itemsArray" :key="index">
+  <div v-for="(item, index) in itemsArray" :key="index">
     <router-link :to="'/' + index">
       <div
         class="dark:bg-gray-800 h-[72px] bg-white rounded-lg shadow flex justify-between items-center px-8"
@@ -23,7 +23,7 @@
             >Due
           </span>
 
-          19 Aug 2021
+          {{ updatedDateString }}
         </p>
 
         <p
@@ -59,10 +59,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 
-import { useMyModule } from "../store/modules/myModule";
-const myModuleStore = useMyModule();
-// const itemsArray = myModuleStore.itemsArray;
-// console.log(itemsArray);
+const itemsArray = ref([]); // Watch for changes in localStorage and update itemsArray
+watchEffect(() => {
+  const storedData = JSON.parse(localStorage.getItem("myModule"));
+  itemsArray.value = storedData || [];
+});
+let updatedDateString = ref("");
+
+// Move this logic inside the watchEffect or computed property to properly use index
+watchEffect(() => {
+  let itemsObject = JSON.parse(localStorage.getItem("itemsObject"));
+  if (itemsObject) {
+    itemsObject.forEach((item, index) => {
+      let daysToAdd = parseInt(item.value2.terms, 10);
+      let dateObj = new Date(item.value2.date);
+      dateObj.setDate(dateObj.getDate() + daysToAdd);
+      updatedDateString = dateObj.toISOString().slice(0, 10);
+    });
+  }
+});
 </script>

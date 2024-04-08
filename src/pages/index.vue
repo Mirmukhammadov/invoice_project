@@ -15,26 +15,32 @@
       <CheaderVue @childData="handleChildData" />
 
       <div class="mt-[100px]">
-        <invoice />
+        <invoice v-if="itemsArraylength" />
+        <emptyInvoice v-else />
       </div>
     </div>
   </div>
+  <router-view></router-view>
 </template>
 
 <script setup>
 import CheaderVue from "../components/Cheader.vue";
 import SidebarVue from "../components/Csidebar.vue";
-import emptyInvoice from "../components/emptyInvoice.vue";
 import invoice from "@/components/invoice.vue";
+import emptyInvoice from "@/components/emptyInvoice.vue";
 import Cform from "@/components/Cform.vue";
+import { useMyModule } from "@/store/modules/myModule";
 
 import { ref } from "vue";
 
 const formModall = ref(false);
+const myModule = useMyModule();
 
 function handleChildData(data) {
   formModall.value = data;
 }
+
+let itemsArraylength = JSON.parse(localStorage.getItem("myModule"));
 </script>
 
 <style scoped>

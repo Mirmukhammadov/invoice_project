@@ -1,8 +1,6 @@
 <template>
   <div class="">
-    <!-- <firstButtonVue /> -->
-    <!-- <secondButtonVue /> -->
-    <indexVue />
+    <router-view></router-view>
   </div>
 </template>
 
