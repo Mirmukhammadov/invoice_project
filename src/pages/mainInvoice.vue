@@ -32,7 +32,7 @@
             <button
               class="text-amber-900 text-[15px] font-bold font-['League Spartan'] leading-[15px] w-[104px] h-10 opacity-5 bg-amber-500 rounded-md"
             >
-              Pending
+              {{ arr[routeId].status }}
             </button>
           </div>
 
@@ -42,11 +42,15 @@
             >
               Edit
             </button>
-            <button class="h-12 bg-rose-500 rounded-3xl text-white buttonStyle">
+            <button
+              class="h-12 bg-rose-500 rounded-3xl text-white buttonStyle"
+              @click="deletee"
+            >
               Delete
             </button>
             <button
               class="h-12 bg-violet-500 rounded-3xl text-white buttonStyle"
+              @click="paid"
             >
               mark as Paid
             </button>
@@ -247,14 +251,29 @@ const moduleStore = useMyModule();
 const router = useRouter();
 
 let arr = JSON.parse(localStorage.getItem("myModule"));
+
 let itemsObject = JSON.parse(localStorage.getItem("itemsObject"));
 
 const routeId = router.currentRoute.value.params.id;
+console.log(arr[routeId].status);
 
 let daysToAdd = parseInt(itemsObject[routeId].value2.terms, 10);
 let dateObj = new Date(itemsObject[routeId].value2.date);
 dateObj.setDate(dateObj.getDate() + daysToAdd);
 let updatedDateString = dateObj.toISOString().slice(0, 10);
+
+function deletee() {
+  // itemsObject = itemsObject.filter((obj) => obj.id !== routeId);
+  itemsObject.splice(routeId, 1);
+  arr.splice(routeId, 1);
+  localStorage.setItem("itemsObject", JSON.stringify(itemsObject));
+  localStorage.setItem("myModule", JSON.stringify(arr));
+}
+
+function paid() {
+  arr[routeId].status = "paid";
+  localStorage.setItem("myModule", JSON.stringify(arr));
+}
 </script>
 
 <style scoped>
