@@ -7,9 +7,12 @@
       >
     </div>
 
-    <div class="flex gap-10 items-center">
+    <div class="flex gap-10 items-center relative">
       <div>
-        <button class="flex items-center cursor-pointer">
+        <button
+          class="flex items-center cursor-pointer"
+          @click="toggleCheckboxvalue"
+        >
           <p
             class="text-gray-950 text-[15px] font-bold font-['League Spartan'] leading-[15px] dark:text-white"
           >
@@ -30,6 +33,58 @@
             />
           </svg>
         </button>
+
+        <div
+          class="w-48 bg-white dark:bg-slate-800 rounded-lg shadow mt-4 absolute left-[-15px]"
+          v-if="checkboxValue"
+        >
+          <div class="flex flex-shrink-0 items-center p-2">
+            <input
+              class="w-auto h-auto border !hover:border-violet-500"
+              type="checkbox"
+              id="Draft"
+              name="Draft"
+              value="Draft"
+              v-model="checkboxvalues"
+            />
+            <label
+              for="Draft"
+              class="text-gray-950 dark:text-white text-[15px] font-bold font-['League Spartan'] leading-[15px] pl-3 m-0"
+              >Draft</label
+            >
+          </div>
+          <div class="flex flex-shrink-0 items-center p-2">
+            <input
+              class="w-auto h-auto"
+              type="checkbox"
+              id="Pending"
+              name="Pending"
+              value="Pending"
+              v-model="checkboxvalues"
+            />
+            <label
+              for="Pending"
+              class="text-gray-950 dark:text-white text-[15px] font-bold font-['League Spartan'] leading-[15px] pl-3 m-0"
+              >Pending</label
+            >
+          </div>
+
+          <div class="flex flex-shrink-0 items-center p-2">
+            <input
+              class="w-auto h-auto"
+              type="checkbox"
+              id="Paid"
+              name="Paid"
+              value="Paid"
+              v-model="checkboxvalues"
+            />
+            <label
+              for="Paid"
+              class="text-gray-950 dark:text-white text-[15px] font-bold font-['League Spartan'] leading-[15px] pl-3 m-0"
+              >Paid</label
+            >
+          </div>
+        </div>
       </div>
       <firstButtonVue @someEvent="toggle" />
     </div>
@@ -49,6 +104,15 @@ import {
 import firstButtonVue from "./firstButton.vue";
 const formModal = ref(true);
 const emit = defineEmits(["childData"]);
+const checkboxValue = ref(false);
+const checkboxvalues = ref([]);
+
+function toggleCheckboxvalue() {
+  checkboxValue.value = !checkboxValue.value;
+  console.log(checkboxvalues.value);
+
+  // emit("childData", checkbox.value);
+}
 
 function toggle() {
   formModal.value = !formModal.value;

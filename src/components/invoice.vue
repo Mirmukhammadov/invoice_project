@@ -1,5 +1,9 @@
 <template>
-  <div v-for="(item, index) in itemsArray" :key="index">
+  <div
+    v-for="(item, index) in itemsArray"
+    :key="index"
+    class="mb-3 rounded-lg border hover:border-violet-500"
+  >
     <router-link :to="'/' + index">
       <div
         class="dark:bg-gray-800 h-[72px] bg-white rounded-lg shadow flex justify-between items-center px-8"
