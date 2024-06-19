@@ -44,7 +44,7 @@
               type="checkbox"
               id="Draft"
               name="Draft"
-              value="Draft"
+              value="draft"
               v-model="checkboxvalues"
             />
             <label
@@ -59,7 +59,7 @@
               type="checkbox"
               id="Pending"
               name="Pending"
-              value="Pending"
+              value="pending"
               v-model="checkboxvalues"
             />
             <label
@@ -75,7 +75,7 @@
               type="checkbox"
               id="Paid"
               name="Paid"
-              value="Paid"
+              value="paid"
               v-model="checkboxvalues"
             />
             <label
@@ -103,13 +103,15 @@ import {
 } from "vue";
 import firstButtonVue from "./firstButton.vue";
 const formModal = ref(true);
-const emit = defineEmits(["childData"]);
+const emit = defineEmits(["childData"], ["update:checkboxValues"]);
 const checkboxValue = ref(false);
 const checkboxvalues = ref([]);
 
 function toggleCheckboxvalue() {
   checkboxValue.value = !checkboxValue.value;
+  emit("update:checkboxValues", checkboxvalues.value);
   console.log(checkboxvalues.value);
+  console.log(JSON.parse(localStorage.getItem("myModule")));
 
   // emit("childData", checkbox.value);
 }
